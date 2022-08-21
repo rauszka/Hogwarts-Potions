@@ -9,9 +9,9 @@ namespace HogwartsPotions.Controllers
     [ApiController, Route("/room")]
     public class RoomController : ControllerBase
     {
-        private readonly HogwartsContext _context;
+        private readonly IRoomService _context;
 
-        public RoomController(HogwartsContext context)
+        public RoomController(IRoomService context)
         {
             _context = context;
         }
@@ -37,7 +37,7 @@ namespace HogwartsPotions.Controllers
         [HttpPut("/{id}")]
         public void UpdateRoomById(long id, [FromBody] Room updatedRoom)
         {
-            _context.Update(updatedRoom);
+            _context.UpdateRoom(updatedRoom);
         }
 
         [HttpDelete("/{id}")]
@@ -51,5 +51,6 @@ namespace HogwartsPotions.Controllers
         {
             return await _context.GetRoomsForRatOwners();
         }
+
     }
 }
