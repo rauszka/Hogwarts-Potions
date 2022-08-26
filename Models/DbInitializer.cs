@@ -43,8 +43,8 @@ namespace HogwartsPotions.Models
                     {
                         new Student
                         {
-                            Name = "Draco",
-                            HouseType = HouseType.Slytherin,
+                            Name = "Harry",
+                            HouseType = HouseType.Gryffindor,
                             PetType = PetType.Owl
                         }
                     }
