@@ -15,6 +15,7 @@ namespace HogwartsPotions.Models
         public DbSet<Room> Rooms { get; set; }
         public DbSet<Ingredient> Ingredients { get; set; }
         public DbSet<Recipe> Recipes { get; set; }
+        public DbSet<Potion> Potions { get; set; }
 
         public HogwartsContext(DbContextOptions<HogwartsContext> options) : base(options)
         {
@@ -24,6 +25,9 @@ namespace HogwartsPotions.Models
         {
             modelBuilder.Entity<Student>().ToTable("Student");
             modelBuilder.Entity<Room>().ToTable("Room");
+            modelBuilder.Entity<Recipe>().ToTable("Recipe");
+            modelBuilder.Entity<Ingredient>().ToTable("Ingredient");
+            modelBuilder.Entity<Potion>().ToTable("Potion");
         }
 
         public async Task AddRoom(Room room)
@@ -69,6 +73,12 @@ namespace HogwartsPotions.Models
             return await Rooms
                 .Where(room => room.Residents.Count < room.Capacity)
                 .ToListAsync();
+        }
+
+        public async Task<List<Potion>> GetAllPotions()
+        {
+            Task<List<Potion>> potions = Potions.ToListAsync();
+            return await potions;
         }
     }
 }

@@ -11,8 +11,8 @@ namespace HogwartsPotions.Models
         {
             context.Database.EnsureCreated();
 
-            // Look for any students.
-            if (context.Students.Any())
+            // Look for any students,rooms,potions.
+            if (context.Students.Any() || context.Rooms.Any() || context.Potions.Any())
             {
                 return;  // Database has been seeded
             }
@@ -66,6 +66,27 @@ namespace HogwartsPotions.Models
             foreach (Room room in rooms)
             {
                 context.Rooms.Add(room);
+            }
+
+            var potions = new Potion[]
+            {
+                new Potion()
+                {
+                    BrewingStatus = BrewingStatus.Brew,
+                    Name = "love-potion",
+                    Student = new Student()
+                    {
+                        Name = "Hermione", 
+                        HouseType = HouseType.Gryffindor,
+                        PetType = PetType.Cat
+                    },
+                    Ingredients = {new Ingredient {Name = "valerian"}}
+                }
+            };
+
+            foreach (Potion potion in potions)
+            {
+                context.Potions.Add(potion);
             }
 
             context.SaveChanges();
