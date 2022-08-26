@@ -1,7 +1,9 @@
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 using HogwartsPotions.Models.Entities;
+using HogwartsPotions.Models.Enums;
 using Microsoft.EntityFrameworkCore;
 
 namespace HogwartsPotions.Models
@@ -49,11 +51,22 @@ namespace HogwartsPotions.Models
         {
             Room room = GetRoom(id).Result;
             Rooms.Remove(room);
+            await SaveChangesAsync();
         }
 
-        public Task<List<Room>> GetRoomsForRatOwners()
+        public async Task<List<Room>> GetRoomsForRatOwners()
         {
-            throw new NotImplementedException();
+            return await Rooms
+                .Include(room => room.Residents)
+                .Where(room => !room.Residents.Any(resident => resident.PetType == PetType.Owl || resident.PetType == PetType.Cat))
+                .ToListAsync();
+        }
+
+        public async Task<List<Room>> GetAvailableRooms()
+        {
+            return await Rooms
+                .Where(room => room.Residents.Count < room.Capacity)
+                .ToListAsync();
         }
     }
 }

@@ -48,7 +48,21 @@ namespace HogwartsPotions.Models
                             PetType = PetType.Owl
                         }
                     }
-                }
+                },
+
+                new Room
+                {
+                    Capacity = 5,
+                    Residents = new HashSet<Student>
+                    {
+                        new Student
+                        {
+                            Name = "Ron",
+                            HouseType = HouseType.Gryffindor,
+                            PetType = PetType.Rat
+                        }
+                    }
+                },
 
             };
 

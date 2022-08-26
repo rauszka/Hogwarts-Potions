@@ -54,5 +54,12 @@ namespace HogwartsPotions.Controllers
         {
             return await _context.GetRoomsForRatOwners();
         }
+
+        [HttpGet("/rat-owners")]
+        public async Task<List<Room>> GetAvailableRooms()
+        {
+            return await _context.GetAvailableRooms();
+        }
+
     }
 }
