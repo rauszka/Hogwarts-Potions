@@ -16,6 +16,12 @@ namespace HogwartsPotions.Models
         {
         }
 
+        protected override void OnModelCreating(ModelBuilder modelBuilder)
+        {
+            modelBuilder.Entity<Student>().ToTable("Student");
+            modelBuilder.Entity<Room>().ToTable("Room");
+        }
+
         public async Task AddRoom(Room room)
         {
             throw new NotImplementedException();
