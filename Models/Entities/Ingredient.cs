@@ -3,11 +3,10 @@ using System.ComponentModel.DataAnnotations.Schema;
 
 namespace HogwartsPotions.Models.Entities
 {
-    public class Room
+    public class Ingredient
     {
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         public long ID { get; set; }
-        public int Capacity { get; set; }
-        public HashSet<Student> Residents { get; set; } = new HashSet<Student>();
+        public int Name { get; set; }
     }
 }
