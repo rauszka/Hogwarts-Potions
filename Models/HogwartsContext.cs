@@ -27,9 +27,10 @@ namespace HogwartsPotions.Models
             await Rooms.AddAsync(room);
         }
 
-        public Task<Room> GetRoom(long roomId)
+        public async Task<Room> GetRoom(long roomId)
         {
-            throw new NotImplementedException();
+            Task<Room> room = Rooms.FindAsync(roomId).AsTask();
+            return await room;
         }
 
         public async Task<List<Room>> GetAllRooms()
@@ -40,12 +41,14 @@ namespace HogwartsPotions.Models
 
         public async Task UpdateRoom(Room room)
         {
-            throw new NotImplementedException();
+            Rooms.Update(room);
+            await SaveChangesAsync();
         }
 
         public async Task DeleteRoom(long id)
         {
-            throw new NotImplementedException();
+            Room room = GetRoom(id).Result;
+            Rooms.Remove(room);
         }
 
         public Task<List<Room>> GetRoomsForRatOwners()
