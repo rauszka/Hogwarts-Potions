@@ -218,7 +218,7 @@ namespace HogwartsPotions.Models
             return ingredient;
         }
 
-        private async Task<Potion> AddIngredient(long id, Ingredient newIngredient)
+        public async Task<Potion> AddIngredient(long id, Ingredient newIngredient)
         {
             Ingredient ingredient;
             try
@@ -234,7 +234,15 @@ namespace HogwartsPotions.Models
             potion.Ingredients.Add(ingredient);
             await SaveChangesAsync();
             return potion;
+        }
 
+        public async Task<List<Recipe>> GetHelp(long id)
+        {
+            Potion potion = await GetPotion(id);
+
+            return Recipes
+                .AsEnumerable()
+                .Where(r => r.Ingredients.SequenceEqual(potion.Ingredients)).ToList();
         }
     }
 }
