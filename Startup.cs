@@ -1,4 +1,6 @@
 using HogwartsPotions.Models;
+using HogwartsPotions.Models.Entities;
+using HogwartsPotions.Models.Implementations;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.EntityFrameworkCore;
@@ -26,6 +28,13 @@ namespace HogwartsPotions
 
             services.AddControllers().AddJsonOptions(x =>
                 x.JsonSerializerOptions.ReferenceHandler = ReferenceHandler.IgnoreCycles);
+
+            services.AddScoped<IIngredient, IngredientIMP>();
+            services.AddScoped<IPotion, PotionIMP>();
+            services.AddScoped<IRecipe, RecipeIMP>();
+            services.AddScoped<IRoom, RoomIMP>();
+            services.AddScoped<IStudent, StudentIMP>();
+
 
             services.AddControllersWithViews();
         }

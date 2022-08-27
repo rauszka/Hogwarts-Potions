@@ -22,7 +22,7 @@ namespace HogwartsPotions.Controllers
             return await _context.GetAllPotions();
         }
 
-        [HttpPost("{studentName}")]
+       /* [HttpPost("{studentName}")]
         public async Task<Potion> AddPotion(string studentName, [FromBody] Potion potion)
         {
             Student student;
@@ -53,7 +53,7 @@ namespace HogwartsPotions.Controllers
         public async Task<Potion> BrewPotion(long studentId)
         {
             return await _context.AddPotionToStudent(studentId);
-        }
+        }*/
 
         [HttpPut("{potionId}/add")]
         public async Task<Potion> AddIngredient(long potionId, [FromBody] Ingredient ingredient)
