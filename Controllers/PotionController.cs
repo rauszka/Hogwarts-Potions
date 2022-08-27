@@ -42,5 +42,18 @@ namespace HogwartsPotions.Controllers
             await _context.SaveChangesAsync();
             return newPotion;
         }
+
+        [HttpGet("{studentId}")]
+        public async Task<List<Potion>> GetStudentPotions(long studentId)
+        {
+            return await _context.GetStudentPotions(studentId);
+        }
+
+        [HttpPost("brew/{studentId}")]
+        public async Task<Potion> BrewPotion(long studentId)
+        {
+            return await _context.AddPotionToStudent(studentId);
+        }
+
     }
 }

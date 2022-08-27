@@ -129,6 +129,18 @@ namespace HogwartsPotions.Models
                 }
                 else
                 {
+                    int counter = GetStudentPotions(newPotion.Student.ID).Result.Count;
+
+                    var newRecipe = new Recipe()
+                    {
+                        Student = newPotion.Student, 
+                        Name = $"{newPotion.Student.Name}'s discovery #{counter++}",
+                        Ingredients = newPotion.Ingredients,
+                    };
+
+                    Recipes.Add(newRecipe);
+                    newPotion.Recipe = newRecipe; 
+
                     newPotion.BrewingStatus = BrewingStatus.Discovery;
 
                     foreach (Ingredient potionIngredient in newPotion.Ingredients)
@@ -150,6 +162,43 @@ namespace HogwartsPotions.Models
         {
             Task<Student> student = Students.FirstAsync(student => student.Name == studentName);
             return await student;
+        }
+
+        public async Task<Student> GetStudentById(long id)
+        {
+            Task<Student> student = Students.FirstAsync(student => student.ID == id);
+            return await student;
+        }
+
+        public async Task<List<Potion>> GetStudentPotions(long studentId)
+        {
+            return await Potions
+                .Where(potion => potion.Student.ID == studentId)
+                .ToListAsync();
+        }
+
+        public async Task<Potion> AddPotionToStudent(long id)
+        {
+            Student student;
+
+            try
+            {
+                student = await GetStudentById(id);
+            }
+            catch
+            {
+                student = await AddStudentByRandomValues($"{id}'s name");
+            }
+
+            Potion potion = new Potion
+            {
+                BrewingStatus = BrewingStatus.Brew,
+                Student = student
+            };
+
+            await Potions.AddAsync(potion);
+            await SaveChangesAsync();
+            return potion;
         }
     }
 }
