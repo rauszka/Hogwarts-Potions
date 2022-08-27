@@ -11,56 +11,60 @@ namespace HogwartsPotions.Models
         {
             context.Database.EnsureCreated();
 
-            // Look for any students,rooms,potions.
-            if (context.Students.Any() || context.Rooms.Any() || context.Potions.Any())
+            // Look for any students,rooms,potions,ingredients.
+            if (context.Students.Any() || context.Rooms.Any() || context.Potions.Any() || context.Ingredients.Any()) 
+
             {
                 return;  // Database has been seeded
             }
 
-            var rooms = new Room[]
+            Student draco = new Student { Name = "Draco", HouseType = HouseType.Slytherin, PetType = PetType.Owl };
+            Student harry = new Student { Name = "Harry", HouseType = HouseType.Gryffindor, PetType = PetType.Owl };
+            Student ron = new Student { Name = "Ron", HouseType = HouseType.Gryffindor, PetType = PetType.Rat };
+
+            Ingredient danRoot = new Ingredient { Name = "Dandelion root" };
+            Ingredient dragBlood = new Ingredient { Name = "Dragon blood" };
+            Ingredient firefly = new Ingredient { Name = "Firefly" };
+            Ingredient frog = new Ingredient { Name = "Frog" };
+            Ingredient iguanaBlood = new Ingredient { Name = "Iguana blood" };
+
+            Recipe Amortentia = new Recipe
             {
-                new Room
-                {
-                    Capacity = 5,
-                    Residents = new HashSet<Student>
-                    {
-                        new Student
-                        {
-                            Name = "Draco",
-                            HouseType = HouseType.Slytherin,
-                            PetType = PetType.Owl
-                        }
-                    }
-                },
+                Name = "Amortentia",
+                Ingredients = new HashSet<Ingredient> { danRoot, frog, iguanaBlood },
+                Student = harry
+            };
 
-                new Room
-                {
-                    Capacity = 5,
-                    Residents = new HashSet<Student>
-                    {
-                        new Student
-                        {
-                            Name = "Harry",
-                            HouseType = HouseType.Gryffindor,
-                            PetType = PetType.Owl
-                        }
-                    }
-                },
+            Recipe Veritaserum = new Recipe
+            {
+                Name = "Veritaserum",
+                Ingredients = new HashSet<Ingredient> { firefly },
+                Student = draco
+            };
 
-                new Room
-                {
-                    Capacity = 5,
-                    Residents = new HashSet<Student>
-                    {
-                        new Student
-                        {
-                            Name = "Ron",
-                            HouseType = HouseType.Gryffindor,
-                            PetType = PetType.Rat
-                        }
-                    }
-                },
+            Potion potion1 = new Potion()
+            {
+                BrewingStatus = BrewingStatus.Brew,
+                Name = "Potion",
+                Student = harry,
+                Ingredients = { danRoot, frog, iguanaBlood },
+                Recipe = Amortentia
+            };
 
+            Potion potion2 = new Potion()
+            {
+                BrewingStatus = BrewingStatus.Brew,
+                Name = "Potion two",
+                Student = draco,
+                Ingredients = { firefly },
+                Recipe = Veritaserum
+            };
+
+            Room[] rooms = 
+            {
+                new Room { Capacity = 5, Residents = new HashSet<Student> { harry }},
+                new Room { Capacity = 5, Residents = new HashSet<Student> { draco }},
+                new Room { Capacity = 5, Residents = new HashSet<Student> { ron }}
             };
 
             foreach (Room room in rooms)
@@ -68,21 +72,14 @@ namespace HogwartsPotions.Models
                 context.Rooms.Add(room);
             }
 
-            var potions = new Potion[]
+            Recipe[] recipes = { Amortentia, Veritaserum };
+
+            foreach (Recipe r in recipes)
             {
-                new Potion()
-                {
-                    BrewingStatus = BrewingStatus.Brew,
-                    Name = "love-potion",
-                    Student = new Student()
-                    {
-                        Name = "Hermione", 
-                        HouseType = HouseType.Gryffindor,
-                        PetType = PetType.Cat
-                    },
-                    Ingredients = {new Ingredient {Name = "valerian"}}
-                }
-            };
+                context.Recipes.Add(r);
+            }
+
+            Potion[] potions = { potion1, potion2 };
 
             foreach (Potion potion in potions)
             {

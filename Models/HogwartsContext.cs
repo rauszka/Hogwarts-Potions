@@ -16,6 +16,7 @@ namespace HogwartsPotions.Models
         public DbSet<Ingredient> Ingredients { get; set; }
         public DbSet<Recipe> Recipes { get; set; }
         public DbSet<Potion> Potions { get; set; }
+        private Random _random = new Random();
 
         public HogwartsContext(DbContextOptions<HogwartsContext> options) : base(options)
         {
@@ -79,6 +80,76 @@ namespace HogwartsPotions.Models
         {
             Task<List<Potion>> potions = Potions.ToListAsync();
             return await potions;
+        }
+
+        public async Task<Student> AddStudentByRandomValues(string name)
+        {
+            Student student = new Student
+            {
+                Name = name,
+                HouseType = (HouseType)_random.Next(0, 4),
+                PetType = (PetType)_random.Next(0, 3),
+                Room = await GetRoom(1)
+            };
+
+            await Students.AddAsync(student);
+            return student;
+        }
+
+        public async Task<Potion> AddPotion(Potion potion)
+        {
+
+            var newPotion = new Potion()
+            {
+                Name = potion.Name,
+                Student = potion.Student,
+                Ingredients = potion.Ingredients,
+                Recipe = potion.Recipe
+
+            };
+
+            if (newPotion.Ingredients.Count < MaxIngredientsForPotions)
+            {
+                newPotion.BrewingStatus = BrewingStatus.Brew;
+
+                foreach (Ingredient potionIngredient in newPotion.Ingredients)
+                {
+                    if (!Ingredients.Any(i => i.Name == potionIngredient.Name))
+                    {
+                        await Ingredients.AddAsync(potionIngredient);
+                    }
+                }
+            }
+            else
+            {
+
+                if (Recipes.Any(recept => recept.Ingredients.All(newPotion.Ingredients.Contains) && recept.Ingredients.Count == newPotion.Ingredients.Count))
+                {
+                    newPotion.BrewingStatus = BrewingStatus.Replica;
+                }
+                else
+                {
+                    newPotion.BrewingStatus = BrewingStatus.Discovery;
+
+                    foreach (Ingredient potionIngredient in newPotion.Ingredients)
+                    {
+                        if (!Ingredients.Any(i => i.Name == potionIngredient.Name))
+                        {
+                            await Ingredients.AddAsync(potionIngredient);
+                        }
+                    }
+                }
+            }
+
+            await Potions.AddAsync(newPotion);
+            await SaveChangesAsync();
+            return newPotion;
+        }
+
+        public async Task<Student> GetStudent(string studentName)
+        {
+            Task<Student> student = Students.FirstAsync(student => student.Name == studentName);
+            return await student;
         }
     }
 }
